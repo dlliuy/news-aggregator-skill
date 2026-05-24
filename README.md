@@ -11,7 +11,7 @@
 
 ## ✨ 核心特性
 
-- **🌍 全网多源聚合**：一站式覆盖跨越硅谷科技、中国创投、开源社区、金融市场以及顶级 AI 播客/硬核推文的 28+ 个高价值信源。
+- **🌍 全网多源聚合**：一站式覆盖跨越硅谷科技、中国创投、开源社区、金融市场以及顶级 AI 播客/硬核推文的 **33+ 个高价值信源**（含用户自定义 OPML）。
 - **🚀 完美支持 OpenClaw**：专为原生大模型 Agent 平台（如 OpenClaw、Code Agent）深度定制，即插即用，沉浸式体验信息流。
 - **🆓 开箱即用 (Zero-Config)**：纯净抓取，**无需配置任何第三方 API Key**，告别繁琐的环境变量和额度焦虑。
 - **🧠 AI 智能深度阅读 (Deep Fetch)**：智能穿透防爬虫机制（内置 Playwright 绕过 Cloudflare），抓取完整正文内容交给大模型过滤、提炼与总结。
@@ -22,7 +22,7 @@
 
 ## 📚 聚合信源图谱
 
-系统现已覆盖全球 **28** 个主流高价值信息渠道，随取随用：
+系统现已覆盖全球 **33+** 个主流高价值信息渠道，随取随用：
 
 ### 🎯 核心新闻源
 - **全球科技**：🦄 Hacker News (`hackernews`), 🐱 Product Hunt (`producthunt`)
@@ -30,6 +30,12 @@
 - **国内风控**：🚀 36Kr (`36kr`), 🐧 腾讯科技 (`tencent`)
 - **社会金融**：🔴 微博热搜 (`weibo`), 📈 华尔街见闻 (`wallstreetcn`)
 - **AI 论文**：🤗 Hugging Face Papers (`huggingface`)
+
+### 🆕 扩展源 (v2)
+- **技术社区**：🦞 Lobsters (`lobsters`), 👩‍💻 Dev.to (`devto`)
+- **学术原文**：📜 arXiv (`arxiv`) —— cs.AI/CL/LG 最新提交
+- **中文深度**：📕 少数派 (`sspai`), 💻 InfoQ 中文 (`infoq_cn`)
+- **自定义订阅**：🔧 通用 OPML (`user`) —— 把任意 RSS/Atom 写进 OPML 就能加进来
 
 ### 📧 AI 行业内参 (Newsletters & Creators)
 - **🧪 Latent Space AINews** (`latentspace_ainews`) - *（近期新增）*
@@ -101,6 +107,7 @@ playwright install chromium
 - **深度穿透**："抓取 5 条最新的 GitHub 趋势，记得开启 Deep Fetch 深入阅读下他们的 README。"
 - **硬核科研**："看看今天 HuggingFace 有什么新发的神仙论文？"
 - **自由组合**："帮我把 Hacker News, 华尔街见闻 和 微博热搜 今天的前十条揉在一起生成一个早报。"
+- **自定义订阅**：拷一份 `user_sources.opml.example` 到 `user_sources.opml`（或 `~/.config/news-aggregator/user_sources.opml`），加自己想看的 RSS，运行 `python scripts/fetch_news.py --source user --limit 15`
 
 ---
 

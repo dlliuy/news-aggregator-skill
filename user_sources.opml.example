@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  user_sources.opml.example - User-defined RSS/Atom feeds template.
+
+  Usage:
+    1. Copy this file to user_sources.opml in skill root,
+       or to ~/.config/news-aggregator/user_sources.opml
+    2. Edit the outline list below to add your own feeds
+    3. Run: python scripts/fetch_news.py  source user  limit 15
+
+  Or export an OPML from Feedly / Inoreader / NetNewsWire to replace this file.
+
+  Only xmlUrl is required; title/text are for display.
+-->
+<opml version="2.0">
+  <head>
+    <title>My News Aggregator Feeds</title>
+  </head>
+  <body>
+    <!-- Example 1: Ruan YiFeng's blog (Chinese tech weekly) -->
+    <outline type="rss" text="阮一峰的网络日志" title="阮一峰的网络日志"
+             xmlUrl="https://www.ruanyifeng.com/blog/atom.xml"
+             htmlUrl="https://www.ruanyifeng.com/blog/" />
+
+    <!-- Example 2: Simon Willison's Weblog (LLM and engineering) -->
+    <outline type="rss" text="Simon Willison" title="Simon Willison"
+             xmlUrl="https://simonwillison.net/atom/everything/"
+             htmlUrl="https://simonwillison.net/" />
+
+    <!-- Example 3: Anthropic News -->
+    <outline type="rss" text="Anthropic News" title="Anthropic News"
+             xmlUrl="https://www.anthropic.com/news/rss.xml"
+             htmlUrl="https://www.anthropic.com/news" />
+  </body>
+</opml>

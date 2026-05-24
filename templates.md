@@ -67,6 +67,21 @@
 
 ---
 
+### 🆕 扩展源 (v2)
+
+| # | 名称 | 命令 |
+|---|---|---|
+| 36 | 🦞 Lobsters 技术深度 | `--source lobsters` |
+| 37 | 👩‍💻 Dev.to 开发者热门 | `--source devto` |
+| 38 | 📜 arXiv AI 最新论文 (cs.AI/CL/LG) | `--source arxiv` |
+| 39 | 📕 少数派 (sspai) | `--source sspai` |
+| 40 | 💻 InfoQ 中文 (软件工程/AI) | `--source infoq_cn --deep` |
+| 41 | 🔧 我的订阅源 (OPML) | `--source user` |
+
+> 💡 **首次使用 OPML（41）**：先 `cp user_sources.opml.example user_sources.opml`，编辑里面的 `<outline xmlUrl="...">` 加自己的源；或从 Feedly/Inoreader 导出 OPML 覆盖即可。
+
+---
+
 ### 🔀 自由组合
 
 直接指定多个源，用逗号分隔：
@@ -79,4 +94,4 @@ hackernews,github,wallstreetcn
 
 ---
 
-**✨ 请输入序号 (1-35) 或源名组合来执行**
+**✨ 请输入序号 (1-41) 或源名组合来执行**

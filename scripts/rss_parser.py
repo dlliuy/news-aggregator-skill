@@ -63,7 +63,8 @@ def parse_rss_content(content, source_name, limit=5):
             elif content: raw_summary = content.get_text()
             
             soup_desc = BeautifulSoup(raw_summary, 'html.parser')
-            clean_summary = soup_desc.get_text(separator=' ', strip=True)[:300] + "..." if len(raw_summary) > 300 else ""
+            _summary_text = soup_desc.get_text(separator=' ', strip=True)
+            clean_summary = (_summary_text[:300] + "...") if len(_summary_text) > 300 else _summary_text
             
             # --- Heat ---
             heat = ""

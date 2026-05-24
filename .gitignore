@@ -58,3 +58,6 @@ test-results/
 .vscode/
 *.swp
 *.swo
+
+# User-specific OPML feeds (keep the .example committed)
+user_sources.opml

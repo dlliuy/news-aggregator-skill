@@ -483,6 +483,116 @@ def fetch_latentspace_ainews(limit=5, keyword=None):
     return filter_items(items[:limit], keyword)
 
 
+# --- Extended Sources (v2): Lobsters / Dev.to / arXiv / Papers with Code / 少数派 / 即刻 / User OPML ---
+
+def fetch_lobsters(limit=5, keyword=None):
+    """Lobsters hottest stories via official JSON API."""
+    items = []
+    try:
+        data = requests.get("https://lobste.rs/hottest.json", headers=HEADERS, timeout=10).json()
+        for story in data:
+            tags = ",".join(story.get('tags', []))
+            items.append({
+                "source": "Lobsters",
+                "title": story.get('title', ''),
+                "url": story.get('url') or story.get('short_id_url') or story.get('comments_url', ''),
+                "comments_url": story.get('comments_url', ''),
+                "heat": f"{story.get('score', 0)} points",
+                "time": story.get('created_at', '')[:10] if story.get('created_at') else '',
+                "tags": tags,
+            })
+    except Exception as e:
+        print(f"Lobsters fetch error: {e}", file=sys.stderr)
+    return filter_items(items[:limit], keyword)
+
+
+def fetch_devto(limit=5, keyword=None):
+    """Dev.to top articles of the past 24h via official JSON API."""
+    items = []
+    try:
+        url = "https://dev.to/api/articles?top=1&per_page=30"
+        data = requests.get(url, headers=HEADERS, timeout=10).json()
+        for art in data:
+            tag_list = art.get('tag_list', [])
+            tags = ",".join(tag_list) if isinstance(tag_list, list) else str(tag_list)
+            items.append({
+                "source": "Dev.to",
+                "title": art.get('title', ''),
+                "url": art.get('url', ''),
+                "heat": f"{art.get('positive_reactions_count', 0)} reactions",
+                "time": (art.get('published_at') or '')[:10],
+                "summary": art.get('description', ''),
+                "tags": tags,
+            })
+    except Exception as e:
+        print(f"Dev.to fetch error: {e}", file=sys.stderr)
+    return filter_items(items[:limit], keyword)
+
+
+def fetch_sspai(limit=5, keyword=None):
+    """少数派 latest articles via RSS."""
+    return filter_items(fetch_rss_feed("https://sspai.com/feed", "少数派", limit * 2)[:limit], keyword)
+
+
+# NOTE: Papers with Code (paperswithcode.com) was acquired/merged by Hugging Face
+# and now 302-redirects to huggingface.co/papers/trending. Duplicates `huggingface` source.
+# Removed from v2 sources. Use --source huggingface for trending papers.
+
+
+def fetch_arxiv(limit=5, keyword=None, categories=None):
+    """arXiv latest submissions in given CS categories via official Atom API.
+    arXiv 接口偶尔较慢，最多重试 3 次（timeout=45s，退避 2s/4s）。"""
+    cats = categories or ['cs.AI', 'cs.CL', 'cs.LG']
+    cat_query = '+OR+'.join(f'cat:{c}' for c in cats)
+    url = (
+        f"http://export.arxiv.org/api/query"
+        f"?search_query={cat_query}"
+        f"&sortBy=submittedDate&sortOrder=descending"
+        f"&max_results={limit * 2}"
+    )
+    items = []
+    from rss_parser import parse_rss_content
+    for attempt in range(3):
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=45)
+            response.encoding = response.apparent_encoding or 'utf-8'
+            items = parse_rss_content(response.content, "arXiv", limit * 2)
+            if items:
+                break
+        except Exception as e:
+            print(f"arXiv attempt {attempt + 1}/3 error: {e}", file=sys.stderr)
+        if attempt < 2:
+            time.sleep(2 * (attempt + 1))  # 2s, 4s
+    return filter_items(items[:limit], keyword)
+
+
+def fetch_infoq_cn(limit=5, keyword=None):
+    """InfoQ 中文站最新文章 via RSS。"""
+    return filter_items(fetch_rss_feed("https://www.infoq.cn/feed.xml", "InfoQ 中文", limit * 2)[:limit], keyword)
+
+
+def fetch_user_feeds(limit=5, keyword=None):
+    """Fetch user-defined RSS feeds from an OPML file.
+    Looks at ~/.config/news-aggregator/user_sources.opml first,
+    then <skill_root>/user_sources.opml."""
+    try:
+        # Add scripts/ to path for direct import
+        sys.path.insert(0, os.path.dirname(__file__))
+        from fetch_user_feeds import find_opml_file, parse_opml, fetch_all_feeds
+        opml_path = find_opml_file()
+        if not opml_path:
+            print("No OPML configured. See user_sources.opml.example", file=sys.stderr)
+            return []
+        feeds = parse_opml(opml_path)
+        if not feeds:
+            return []
+        items = fetch_all_feeds(feeds, limit_per_feed=3)
+        return filter_items(items[:limit], keyword)
+    except Exception as e:
+        print(f"User feeds error: {e}", file=sys.stderr)
+        return []
+
+
 # --- Source Definitions (Global for Access) ---
 
 AI_NEWSLETTER_SOURCES = [
@@ -625,6 +735,13 @@ def main():
         'essays': fetch_essays,
         # Standalone AI Sources
         'latentspace_ainews': fetch_latentspace_ainews,
+        # Extended (v2): tech community / academic / Chinese deep-content / user OPML
+        'lobsters': fetch_lobsters,
+        'devto': fetch_devto,
+        'sspai': fetch_sspai,
+        'infoq_cn': fetch_infoq_cn,
+        'arxiv': fetch_arxiv,
+        'user': fetch_user_feeds,
     }
 
     # Dynamic Registration of Sub-sources
