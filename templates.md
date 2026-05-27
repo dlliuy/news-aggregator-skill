@@ -76,9 +76,29 @@
 | 38 | 📜 arXiv AI 最新论文 (cs.AI/CL/LG) | `--source arxiv` |
 | 39 | 📕 少数派 (sspai) | `--source sspai` |
 | 40 | 💻 InfoQ 中文 (软件工程/AI) | `--source infoq_cn --deep` |
-| 41 | 🔧 我的订阅源 (OPML) | `--source user` |
 
-> 💡 **首次使用 OPML（41）**：先 `cp user_sources.opml.example user_sources.opml`，编辑里面的 `<outline xmlUrl="...">` 加自己的源；或从 Feedly/Inoreader 导出 OPML 覆盖即可。
+---
+
+### 🎯 AI 精选聚合 (v3) —— 二次精选，密度最高
+
+> 这一档是别人的编辑团队替你筛过的 AI 高价值内容，单源信息密度顶 5-10 个原始信源。
+
+| # | 名称 | 命令 |
+|---|---|---|
+| 41 | 🔥 AIHOT 中文 AI 精选（跨源 + 中文编辑稿） | `--source aihot` |
+| 42 | 📨 TLDR AI（英文日刊，每天 5-10 主题摘要） | `--source tldr_ai` |
+| 43 | 📜 Import AI by Jack Clark（英文周刊深度评论） | `--source import_ai --deep` |
+| 44 | 🌐 AI 精选三件套（一次拉全） | `--source aihot,tldr_ai,import_ai` |
+
+---
+
+### 🔧 自定义订阅源
+
+| # | 名称 | 命令 |
+|---|---|---|
+| 45 | 🔧 我的订阅源 (OPML) | `--source user` |
+
+> 💡 **首次使用 OPML（45）**：先 `cp user_sources.opml.example user_sources.opml`，编辑里面的 `<outline xmlUrl="...">` 加自己的源；或从 Feedly/Inoreader 导出 OPML 覆盖即可。
 
 ---
 
@@ -94,4 +114,4 @@ hackernews,github,wallstreetcn
 
 ---
 
-**✨ 请输入序号 (1-41) 或源名组合来执行**
+**✨ 请输入序号 (1-45) 或源名组合来执行**

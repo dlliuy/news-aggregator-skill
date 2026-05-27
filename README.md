@@ -11,7 +11,7 @@
 
 ## ✨ 核心特性
 
-- **🌍 全网多源聚合**：一站式覆盖跨越硅谷科技、中国创投、开源社区、金融市场以及顶级 AI 播客/硬核推文的 **33+ 个高价值信源**。
+- **🌍 全网多源聚合**：一站式覆盖跨越硅谷科技、中国创投、开源社区、金融市场以及顶级 AI 播客/硬核推文的 **36+ 个高价值信源**。
 - **🔧 OPML 自定义订阅**：内置 33 源覆盖不全？把任意 RSS/Atom 写进 `user_sources.opml` 一行就接入，兼容 Feedly / Inoreader 等 RSS 阅读器导出格式。**国际中文媒体（BBC 中文 / NYT 中文等）也走这条路**，详见 `user_sources.opml.example`。
 - **🚀 完美支持 OpenClaw**：专为原生大模型 Agent 平台（如 OpenClaw、Code Agent）深度定制，即插即用，沉浸式体验信息流。
 - **🆓 开箱即用 (Zero-Config)**：纯净抓取，**无需配置任何第三方 API Key**，告别繁琐的环境变量和额度焦虑。
@@ -23,7 +23,7 @@
 
 ## 📚 聚合信源图谱
 
-系统现已覆盖全球 **33+** 个主流高价值信息渠道，随取随用：
+系统现已覆盖全球 **36+** 个主流高价值信息渠道，随取随用：
 
 ### 🎯 核心新闻源
 - **全球科技**：🦄 Hacker News (`hackernews`), 🐱 Product Hunt (`producthunt`)
@@ -36,7 +36,14 @@
 - **技术社区**：🦞 Lobsters (`lobsters`), 👩‍💻 Dev.to (`devto`)
 - **学术原文**：📜 arXiv (`arxiv`) —— cs.AI/CL/LG 最新提交
 - **中文深度**：📕 少数派 (`sspai`), 💻 InfoQ 中文 (`infoq_cn`)
-- **自定义订阅**：🔧 通用 OPML (`user`) —— 把任意 RSS/Atom 写进 OPML 就能加进来
+
+### 🎯 AI 精选聚合 (v3) —— 单源信息密度顶 5-10 个原始源
+- **中文 AI 跨源精选**：🔥 AIHOT (`aihot`) —— 跨 X / IT 之家 / DeepMind / Anthropic / 各 AI 公司 newsroom 的中文编辑稿日更
+- **英文日刊**：📨 TLDR AI (`tldr_ai`) —— 每日 5-10 主题摘要
+- **英文周刊深度**：📜 Import AI (`import_ai`) —— Jack Clark（前 OpenAI/Anthropic 联创）独立思考
+
+### 🔧 自定义订阅
+- 通用 OPML (`user`) —— 把任意 RSS/Atom 写进 OPML 就能加进来
 
 ### 📧 AI 行业内参 (Newsletters & Creators)
 - **🧪 Latent Space AINews** (`latentspace_ainews`) - *（近期新增）*

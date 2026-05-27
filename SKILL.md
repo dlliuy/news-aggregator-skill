@@ -1,11 +1,11 @@
 ---
 name: news-aggregator-skill
-description: "Comprehensive news aggregator that fetches, filters, and deeply analyzes real-time content from 33+ sources including Hacker News, Lobsters, Dev.to, GitHub, arXiv, Hugging Face Papers, AI Newsletters, WallStreetCN, Weibo, 少数派, InfoQ 中文, Podcasts, and user-defined OPML feeds. Use when user requests 'daily scans', 'tech news', 'finance updates', 'AI briefings', 'deep analysis', or says '如意如意' to open the interactive menu."
+description: "Comprehensive news aggregator that fetches, filters, and deeply analyzes real-time content from 36+ sources including Hacker News, Lobsters, Dev.to, GitHub, arXiv, Hugging Face Papers, AIHOT, TLDR AI, Import AI, AI Newsletters, WallStreetCN, Weibo, 少数派, InfoQ 中文, Podcasts, and user-defined OPML feeds. Use when user requests 'daily scans', 'tech news', 'finance updates', 'AI briefings', 'deep analysis', or says '如意如意' to open the interactive menu."
 ---
 
 # News Aggregator Skill
 
-Fetch real-time hot news from 33+ sources (including user-defined OPML feeds), generate deep analysis reports in Chinese.
+Fetch real-time hot news from 36+ sources (including AI curated aggregators + user-defined OPML feeds), generate deep analysis reports in Chinese.
 
 ---
 
@@ -58,6 +58,9 @@ Only the **differences** from the universal template:
 | **GitHub** | Use `🌟 Stars` for Heat, add `Lang` field, add `#Tags` in Deep Dive |
 | **Hugging Face** | Use `🔥 +N` upvotes for Heat, include `[GitHub](url)` if present, write **深度解读** (not just translate abstract) |
 | **Weibo** | Preserve exact heat text (e.g. "108万") |
+| **AIHOT** | `summary` 已是中文编辑稿，**直接引用**不要再翻译；Heat 字段为空也别造数据；保留 `推荐理由` 风格的一句话点评 |
+| **TLDR AI** | 单条标题往往是多主题混合（`Topic A 💻, Topic B ⚡, Topic C ⛪`），**拆成 bullet 列出每个主题**；`summary` 是 HTML 段落，需要拆出每个主题对应的一两句概述 |
+| **Import AI** | 周刊长文，标题形如 `Import AI 458: 主题1; 主题2; 主题3`。**建议默认配 `--deep`**，否则 RSS summary 只是开头几句；Deep Dive 直接提炼 Jack Clark 的核心观点而非平铺事实 |
 
 ---
 
@@ -74,7 +77,7 @@ Only the **differences** from the universal template:
 | `--save` | Force save to reports dir | Auto for single source |
 | `--outdir` | Custom output directory | `reports/YYYY-MM-DD/` |
 
-### Available Sources (33+ with user OPML)
+### Available Sources (36+ with user OPML)
 
 | Category | Key | Name |
 |---|---|---|
@@ -100,6 +103,9 @@ Only the **differences** from the universal template:
 | | `kdnuggets` | KDnuggets |
 | **Chinese** (v2) | `sspai` | 少数派 |
 | | `infoq_cn` | InfoQ 中文站（RSS 只给标题，**推荐配 `--deep`** 拿正文） |
+| **AI Curated** (v3) | `aihot` | AIHOT 中文 AI 精选（跨源 + 中文编辑稿）|
+| | `tldr_ai` | TLDR AI 英文日刊 |
+| | `import_ai` | Import AI by Jack Clark 周刊（**推荐 `--deep`**）|
 | **Podcasts** | `podcasts` | All Podcasts (aggregate) |
 | | `lexfridman` | Lex Fridman |
 | | `80000hours` | 80,000 Hours |

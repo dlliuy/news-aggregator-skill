@@ -581,6 +581,21 @@ def fetch_infoq_cn(limit=5, keyword=None):
     return filter_items(fetch_rss_feed("https://www.infoq.cn/feed.xml", "InfoQ 中文", limit * 2)[:limit], keyword)
 
 
+def fetch_aihot(limit=5, keyword=None):
+    """AIHOT (aihot.virxact.com) AI 精选聚合，跨源中文编辑稿，日更 ~50 条。"""
+    return filter_items(fetch_rss_feed("https://aihot.virxact.com/rss", "AIHOT", limit * 2)[:limit], keyword)
+
+
+def fetch_tldr_ai(limit=5, keyword=None):
+    """TLDR AI 英文每日 AI 摘要，5-10 主题/期。"""
+    return filter_items(fetch_rss_feed("https://tldr.tech/api/rss/ai", "TLDR AI", limit * 2)[:limit], keyword)
+
+
+def fetch_import_ai(limit=5, keyword=None):
+    """Import AI by Jack Clark（前 OpenAI/Anthropic 联创）周更深度评论。"""
+    return filter_items(fetch_rss_feed("https://importai.substack.com/feed", "Import AI", limit * 2)[:limit], keyword)
+
+
 def fetch_user_feeds(limit=5, keyword=None):
     """Fetch user-defined RSS feeds from an OPML file.
     Looks at ~/.config/news-aggregator/user_sources.opml first,
@@ -751,6 +766,10 @@ def main():
         'sspai': fetch_sspai,
         'infoq_cn': fetch_infoq_cn,
         'arxiv': fetch_arxiv,
+        # Curated AI aggregators (v3): one feed = many original sources, pre-curated
+        'aihot': fetch_aihot,
+        'tldr_ai': fetch_tldr_ai,
+        'import_ai': fetch_import_ai,
         'user': fetch_user_feeds,
     }
 
