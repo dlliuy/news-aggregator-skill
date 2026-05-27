@@ -11,7 +11,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def clean_text(text):
     if not text: return ""
-    return text.strip()
+    text = text.strip()
+    # html.parser leaves CDATA markers intact; strip them
+    text = re.sub(r'^\s*<!\[CDATA\[|\]\]>\s*$', '', text).strip()
+    return text
 
 def parse_rss_content(content, source_name, limit=5):
     """
