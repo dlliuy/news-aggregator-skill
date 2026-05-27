@@ -34,7 +34,7 @@
     <!-- Uncomment the ones you want. All confirmed live but blocked in CN. -->
 
     <!--
-    BBC 中文 (BBC Chinese, simplified)
+    BBC 中文 (already built in as --source bbc_chinese; keep as a custom-feed example only)
     <outline type="rss" text="BBC 中文" title="BBC 中文"
              xmlUrl="https://feeds.bbci.co.uk/zhongwen/simp/rss.xml"
              htmlUrl="https://www.bbc.com/zhongwen/simp" />

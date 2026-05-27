@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import urllib3
 import re
+import time
 from datetime import datetime
 
 # Suppress insecure request warnings
@@ -95,18 +96,23 @@ def fetch_rss_feed(url, source_name, limit=5):
     Robust RSS/Atom fetcher using BeautifulSoup.
     Handles various feed formats (RSS 2.0, Atom, etc.)
     """
-    try:
-        # User-Agent is critical
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
-        }
-        
-        response = requests.get(url, headers=headers, timeout=15, verify=False)
-        response.encoding = response.apparent_encoding or 'utf-8'
-        
-        return parse_rss_content(response.content, source_name, limit)
+    # User-Agent is critical
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+    }
 
-    except Exception as e:
-        print(f"RSS Fetch failed for {url}: {e}", file=sys.stderr)
-        return []
+    last_error = None
+    for attempt in range(3):
+        try:
+            response = requests.get(url, headers=headers, timeout=15, verify=False)
+            response.raise_for_status()
+            response.encoding = response.apparent_encoding or 'utf-8'
+            return parse_rss_content(response.content, source_name, limit)
+        except Exception as e:
+            last_error = e
+            if attempt < 2:
+                time.sleep(1 + attempt)
+
+    print(f"RSS Fetch failed for {url}: {last_error}", file=sys.stderr)
+    return []

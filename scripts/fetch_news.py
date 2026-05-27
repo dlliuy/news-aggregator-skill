@@ -624,6 +624,83 @@ def fetch_import_ai(limit=2, keyword=None):
     return filter_items(items[:limit], keyword)
 
 
+INTERNATIONAL_NEWS_SOURCES = [
+    ("BBC Top News", "https://feeds.bbci.co.uk/news/rss.xml"),
+    ("BBC World", "https://feeds.bbci.co.uk/news/world/rss.xml"),
+    ("BBC Chinese", "https://feeds.bbci.co.uk/zhongwen/simp/rss.xml"),
+    ("The Guardian World", "https://www.theguardian.com/world/rss"),
+    ("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml"),
+    ("France 24", "http://www.france24.com/en/rss"),
+]
+
+REUTERS_GOOGLE_NEWS_RSS = (
+    "https://news.google.com/rss/search?"
+    "q=site%3Areuters.com%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
+)
+
+INTERNATIONAL_NEWS_MAX_AGE_HOURS = 24
+
+
+def fetch_recent_rss_feed(url, source_name, limit=10, keyword=None, hours=INTERNATIONAL_NEWS_MAX_AGE_HOURS):
+    """Fetch an RSS feed and keep only items from the recent time window."""
+    raw = fetch_rss_feed(url, source_name, max(limit * 4, 30))
+    items = filter_by_hours(raw, hours=hours)
+    return filter_items(items, keyword)[:limit]
+
+
+def create_recent_rss_fetcher(url, name, hours=INTERNATIONAL_NEWS_MAX_AGE_HOURS):
+    def fetcher(limit=5, keyword=None):
+        return fetch_recent_rss_feed(url, name, limit, keyword, hours)
+    return fetcher
+
+
+def fetch_reuters(limit=10, keyword=None):
+    """Reuters public fallback via Google News RSS.
+    Reuters.com no longer exposes a reliable unauthenticated public RSS feed."""
+    items = fetch_rss_feed(
+        REUTERS_GOOGLE_NEWS_RSS,
+        "Reuters (Google News fallback)",
+        max(limit * 4, 30),
+    )
+    items = filter_by_hours(items, hours=INTERNATIONAL_NEWS_MAX_AGE_HOURS)
+    for item in items:
+        title = item.get('title', '')
+        if title.endswith(' - Reuters'):
+            item['title'] = title[:-10]
+        item['fallback'] = "Google News RSS search for site:reuters.com"
+    return filter_items(items, keyword)[:limit]
+
+
+def fetch_international(limit=15, keyword=None):
+    """Aggregate official international RSS feeds plus Reuters fallback."""
+    per_source = max(2, min(5, limit // 3))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        tasks = [
+            (name, executor.submit(fetch_recent_rss_feed, url, name, per_source, keyword))
+            for name, url in INTERNATIONAL_NEWS_SOURCES
+        ]
+        tasks.append(("Reuters", executor.submit(fetch_reuters, per_source, keyword)))
+
+        item_groups = []
+        for name, future in tasks:
+            try:
+                items = future.result()
+                if items:
+                    item_groups.append(items)
+            except Exception as e:
+                print(f"International fetch error for {name}: {e}", file=sys.stderr)
+
+    merged = []
+    max_group_len = max((len(group) for group in item_groups), default=0)
+    for index in range(max_group_len):
+        for group in item_groups:
+            if index < len(group):
+                merged.append(group[index])
+            if len(merged) >= limit:
+                return merged
+    return merged
+
+
 def fetch_user_feeds(limit=5, keyword=None):
     """Fetch user-defined RSS feeds from an OPML file.
     Looks at ~/.config/news-aggregator/user_sources.opml first,
@@ -798,6 +875,15 @@ def main():
         'aihot': fetch_aihot,
         'tldr_ai': fetch_tldr_ai,
         'import_ai': fetch_import_ai,
+        # International news (official RSS where available; Reuters uses a marked fallback)
+        'international': fetch_international,
+        'bbc_top': create_recent_rss_fetcher("https://feeds.bbci.co.uk/news/rss.xml", "BBC Top News"),
+        'bbc_world': create_recent_rss_fetcher("https://feeds.bbci.co.uk/news/world/rss.xml", "BBC World"),
+        'bbc_chinese': create_recent_rss_fetcher("https://feeds.bbci.co.uk/zhongwen/simp/rss.xml", "BBC Chinese"),
+        'guardian_world': create_recent_rss_fetcher("https://www.theguardian.com/world/rss", "The Guardian World"),
+        'aljazeera': create_recent_rss_fetcher("https://www.aljazeera.com/xml/rss/all.xml", "Al Jazeera"),
+        'france24': create_recent_rss_fetcher("http://www.france24.com/en/rss", "France 24"),
+        'reuters': fetch_reuters,
         'user': fetch_user_feeds,
     }
 

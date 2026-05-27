@@ -102,6 +102,23 @@
 
 ---
 
+### 🌍 国际新闻源
+
+| # | 名称 | 命令 |
+|---|---|---|
+| 46 | 🌍 国际新闻聚合 (最近 24h) | `--source international --limit 20` |
+| 47 | 📰 BBC Top News (最近 24h) | `--source bbc_top` |
+| 48 | 🌐 BBC World (最近 24h) | `--source bbc_world` |
+| 49 | 🈶 BBC 中文 (最近 24h) | `--source bbc_chinese` |
+| 50 | 🗞️ The Guardian World (最近 24h) | `--source guardian_world` |
+| 51 | 🛰️ Al Jazeera (最近 24h) | `--source aljazeera` |
+| 52 | 🇫🇷 France 24 (最近 24h) | `--source france24` |
+| 53 | 🧭 Reuters fallback (Google News RSS, 最近 24h) | `--source reuters` |
+
+> 💡 **输出与时间窗口**：国际新闻源必须按统一报告模板输出；抓取只保留最近 24 小时内容，不用旧闻补位。`reuters` 使用 Google News RSS 的 `site:reuters.com` 检索结果。Reuters 官方公开 RSS 不稳定；如有 Reuters Connect 账号，可把 authenticated RSS 放进 OPML。
+
+---
+
 ### 🔀 自由组合
 
 直接指定多个源，用逗号分隔：
@@ -114,4 +131,4 @@ hackernews,github,wallstreetcn
 
 ---
 
-**✨ 请输入序号 (1-45) 或源名组合来执行**
+**✨ 请输入序号 (1-53) 或源名组合来执行**
