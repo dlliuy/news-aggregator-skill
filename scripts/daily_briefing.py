@@ -133,6 +133,32 @@ PROFILES = {
             "sources": [(fetch_hackernews, 20, "blog,essay,philosophy,book")],
             "enrich": True
         }
+    },
+
+    # 8. 外资观点日报 (Foreign Institutional Views)
+    "foreign_views": {
+        "institutional_views": {
+            "sources": [
+                (fetch_wallstreetcn, 40, "高盛,Goldman,摩根士丹利,大摩,Morgan Stanley,瑞银,UBS,花旗,Citigroup,美银,Bank of America,贝莱德,BlackRock,桥水,Bridgewater,PIMCO,太平洋投资,景顺,Invesco,看多,看空,买入,卖出,升级,降级,bullish,bearish,upgrade,downgrade,overweight,underweight"),
+                (fetch_36kr, 20, "高盛,大摩,瑞银,花旗,外资,北向资金,QFII"),
+                (fetch_tencent, 15, "高盛,大摩,瑞银,外资,北向资金")
+            ],
+            "enrich": True
+        },
+        "sector_rotation": {
+            "sources": [
+                (fetch_wallstreetcn, 30, "板块轮动,资金流入,资金流出,增持,减持,超配,低配,sector rotation,capital flow,inflow,outflow,轮动,流向"),
+                (fetch_hackernews, 15, "rotation,flow,capital,sector")
+            ],
+            "enrich": True
+        },
+        "china_views": {
+            "sources": [
+                (fetch_wallstreetcn, 25, "中国,A股,港股,中概,China,Chinese stocks"),
+                (fetch_36kr, 15, "外资,北向资金,中国股市")
+            ],
+            "enrich": True
+        }
     }
 }
 
