@@ -360,9 +360,21 @@ def fetch_tencent(limit=5, keyword=None):
         return filter_items(items, keyword)[:limit]
     except: return []
 
-def fetch_wallstreetcn(limit=5, keyword=None):
+def extract_article_id(url):
+    """从 URL 提取文章 ID
+    https://wallstreetcn.com/articles/3774008 → 3774008
+    """
+    import re as _re
+    if not url:
+        return None
+    match = _re.search(r'/articles/(\d+)', url)
+    return match.group(1) if match else None
+
+
+def fetch_wallstreetcn(limit=50, keyword=None):
     try:
-        url = "https://api-one.wallstcn.com/apiv1/content/information-flow?channel=global-channel&accept=article&limit=30"
+        api_limit = max(limit, 30)  # API 至少取 30 条，确保关键词过滤后有足够结果
+        url = f"https://api-one.wallstcn.com/apiv1/content/information-flow?channel=global-channel&accept=article&limit={api_limit}"
         data = requests.get(url, timeout=10).json()
         items = []
         for item in data['data']['items']:
@@ -370,11 +382,14 @@ def fetch_wallstreetcn(limit=5, keyword=None):
             if res and (res.get('title') or res.get('content_short')):
                  ts = res.get('display_time', 0)
                  time_str = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M') if ts else ""
+                 item_url = res.get('uri', '')
                  items.append({
-                     "source": "Wall Street CN", 
-                     "title": res.get('title') or res.get('content_short'), 
-                     "url": res.get('uri'),
-                     "time": time_str
+                     "source": "Wall Street CN",
+                     "title": res.get('title') or res.get('content_short'),
+                     "url": item_url,
+                     "time": time_str,
+                     "content_short": res.get('content_short', ''),
+                     "article_id": extract_article_id(item_url),
                  })
         return filter_items(items, keyword)[:limit]
     except: return []
